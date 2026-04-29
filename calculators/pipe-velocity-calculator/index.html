@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pipe Velocity Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 850px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    input, select, button {
+      padding: 8px;
+      margin: 6px 0;
+      width: 100%;
+      max-width: 300px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      background: #f7f7f7;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pipe Velocity Calculator</h1>
+
+  <p>
+    This calculator estimates average flow velocity in a circular pipe using pipe internal diameter and flow rate.
+  </p>
+
+  <h2>Inputs</h2>
+
+  <label>Pipe internal diameter (mm)</label><br />
+  <input type="number" id="diameter" placeholder="Example: 100" /><br />
+
+  <label>Flow rate</label><br />
+  <input type="number" id="flow" placeholder="Example: 10" /><br />
+
+  <label>Flow unit</label><br />
+  <select id="flowUnit">
+    <option value="Lps">L/s</option>
+    <option value="m3h">m³/h</option>
+  </select><br />
+
+  <button onclick="calculateVelocity()">Calculate</button>
+
+  <div class="result" id="result">
+    Results will appear here.
+  </div>
+
+  <h2>Formula</h2>
+
+  <p>
+    Velocity is calculated using:
+  </p>
+
+  <p>
+    <strong>v = Q / A</strong>
+  </p>
+
+  <p>
+    where:
+  </p>
+
+  <ul>
+    <li><strong>v</strong> = average velocity, m/s</li>
+    <li><strong>Q</strong> = flow rate, m³/s</li>
+    <li><strong>A</strong> = pipe cross-sectional area, m²</li>
+  </ul>
+
+  <script>
+    function calculateVelocity() {
+      const diameterMm = parseFloat(document.getElementById("diameter").value);
+      const flowInput = parseFloat(document.getElementById("flow").value);
+      const flowUnit = document.getElementById("flowUnit").value;
+
+      if (!diameterMm || !flowInput || diameterMm <= 0 || flowInput <= 0) {
+        document.getElementById("result").innerHTML =
+          "Please enter positive values for diameter and flow rate.";
+        return;
+      }
+
+      const diameterM = diameterMm / 1000;
+      const area = Math.PI * Math.pow(diameterM, 2) / 4;
+
+      let flowM3s;
+      if (flowUnit === "Lps") {
+        flowM3s = flowInput / 1000;
+      } else {
+        flowM3s = flowInput / 3600;
+      }
+
+      const velocity = flowM3s / area;
+
+      document.getElementById("result").innerHTML = `
+        <strong>Results</strong><br>
+        Pipe internal diameter: ${diameterMm.toFixed(1)} mm<br>
+        Cross-sectional area: ${area.toFixed(5)} m²<br>
+        Flow rate: ${flowM3s.toFixed(5)} m³/s<br>
+        Average velocity: <strong>${velocity.toFixed(3)} m/s</strong>
+      `;
+    }
+  </script>
+</body>
+</html>
